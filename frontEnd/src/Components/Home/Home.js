@@ -35,15 +35,36 @@ class Home extends Component {
             return this.setState({ issues:cache[searchCacheForMatch] , loading:false, error:false })
         }
 
-        axios.get(uri)
-        .then(res => {
-            // console.log(JSON.stringify(res.data,null,4))
-            if(res.data.status === 'error'){
-                return this.setState({ issues:[], error:true,loading:false,  })
-            }
-            this.setState({ issues: res.data, loading:false, error:null, cache:{ cache, [uri]: res.data } })
+        var requestStream = Rx.Observable.of(uri);
+        var reponseStream = requestStream.flatMap( reqUri =>{
+            return Rx.Observable.fromPromise(axios.get(reqUri))
+                                .map(res => res.data)
         })
-        .catch(err => this.setState({ issues: res.data, loading:false, error:true }) )
+
+        reponseStream.subscribe( 
+            res => {
+                if(res.status === 'error'){
+                    return this.setState({ issues:[], error:true,loading:false,  })
+                }
+                this.setState({ issues: res, loading:false, error:null, cache:{ cache, [uri]: res } })
+            }, error => {
+                this.setState({ issues: [], loading:false, error:true })
+            }, () => {
+                console.log('completed')
+            }
+
+        )
+
+
+        // axios.get(uri)
+        // .then(res => {
+        //     // console.log(JSON.stringify(res.data,null,4))
+        //     if(res.data.status === 'error'){
+        //         return this.setState({ issues:[], error:true,loading:false,  })
+        //     }
+        //     this.setState({ issues: res.data, loading:false, error:null, cache:{ cache, [uri]: res.data } })
+        // })
+        // .catch(err => this.setState({ issues: [], loading:false, error:true }) )
     }
 
     clearResults = (event) => {

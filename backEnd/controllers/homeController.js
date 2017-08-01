@@ -16,17 +16,47 @@ router.get('/',(req,res)=>{
     res.sendFile(serverRenderedView)
 })
 
+
+// router.get('/:owner/:repository',(req,res)=>{
+//     console.log('new data')
+//     const reqUri = baseUri+ '/repos/' + req.params.owner + '/' + req.params.repository + '/issues' + '?per_page=50'
+//     console.log(reqUri)
+
+//     let reqObs =  Rx.Observable.fromPromise(axios.get(reqUri))
+//                                 .map(response => response.data)
+
+//     reqObs.subscribe( 
+//         response => {
+//             res.send(response)
+//         }, error => {
+//             res.send({ status:'error' })
+//         }, () => {
+//             console.log('completed')
+//         }
+
+//     )
+
+// })
+
+
+// use streams
 router.get('/:owner/:repository',(req,res)=>{
     console.log('new data')
     const reqUri = baseUri+ '/repos/' + req.params.owner + '/' + req.params.repository + '/issues' + '?per_page=50'
     console.log(reqUri)
 
-    let reqObs =  Rx.Observable.fromPromise(axios.get(reqUri))
-                                .map(response => response.data)
+    // let reqObs =  Rx.Observable.fromPromise(axios.get(reqUri))
+    //                             .map(response => response.data)
 
-    reqObs.subscribe( 
-        response => {
-            res.send(response)
+    var requestStream = Rx.Observable.of(reqUri);
+    var reponseStream = requestStream.flatMap( url =>{
+        return Rx.Observable.fromPromise(axios.get(url))
+                            .map(resGit => resGit.data)
+    })
+
+    reponseStream.subscribe( 
+        resGit => {
+            res.send(resGit)
         }, error => {
             res.send({ status:'error' })
         }, () => {
