@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 require('./styles.css')
 import axios from 'axios'
 import Issue from './Issue'
+const Rx = require('rxjs/Rx');
+
 
 class Home extends Component {
 
@@ -9,8 +11,9 @@ class Home extends Component {
         ownerInput:'',
         repoInput:'',
         issues:[],
+        cache:{},
         loading:false,
-        error:null
+        error:false
     }
 
     onChangeOwner = (event) => {
@@ -18,30 +21,34 @@ class Home extends Component {
     }
 
     onChangeRepo = (event) => {
-
         this.setState({ repoInput: event.target.value })
     }
 
     queryIssues = (event) => {
         event.preventDefault()
-        this.setState({loading:true})
-        let uri = 'http://localhost:8080/' + this.state.ownerInput + '/' + this.state.repoInput + '/'
-        console.log(uri)
+        this.setState({loading:true, error:false})
+        let uri = 'http://localhost:8080/' + this.state.ownerInput.trim() + '/' + this.state.repoInput.trim() + '/'
+
+        let {cache} = this.state
+        let searchCacheForMatch = Object.keys(cache).find(key => key === uri )
+        if( searchCacheForMatch ){
+            return this.setState({ issues:cache[searchCacheForMatch] , loading:false, error:false })
+        }
 
         axios.get(uri)
         .then(res => {
-            console.log(JSON.stringify(res.data,null,4))
+            // console.log(JSON.stringify(res.data,null,4))
             if(res.data.status === 'error'){
-                return this.setState({ issues:[], error:true,loading:false })
+                return this.setState({ issues:[], error:true,loading:false,  })
             }
-            this.setState({ issues: res.data, loading:false, error:null })
+            this.setState({ issues: res.data, loading:false, error:null, cache:{ cache, [uri]: res.data } })
         })
         .catch(err => this.setState({ issues: res.data, loading:false, error:true }) )
     }
 
     clearResults = (event) => {
         event.preventDefault()
-        this.setState({ issues:[],  })
+        this.setState({ issues:[], error:false, loading:false })
     }
 
     renderIssues(issues){
@@ -55,7 +62,7 @@ class Home extends Component {
 
   render() {
     
-    let {issues,loading,error} = this.state
+    let {issues,loading,error,ownerInput,repoInput} = this.state
 
     return (
       <div className='home-container' >
@@ -77,11 +84,13 @@ class Home extends Component {
              <button value="Clear" className = 'buttonStyle' onClick = {this.clearResults} > Clear </button>
             <br/>
         </form>
-        <div className = 'issuesContainer' >
-             { loading? <div> Loading, please wait ... </div> : null } 
-            { error ? <div> No repository found for these identifiers </div> : null }
+        { loading? <div className='loading-text' > Loading, please wait ... </div> : null } 
+        { error ? <div className='error-text' > No repository found for these identifiers </div> : null }
+
+        { issues.length > 0 ? (<div className = 'issuesContainer' >
+            <div className = 'issues-title'> Latest 50 issues for repository {ownerInput}/{repoInput} </div>
             { issues.length > 0 ? this.renderIssues(issues) : null }
-        </div>
+        </div>) : null }
       </div>
     );
   }

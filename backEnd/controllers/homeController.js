@@ -18,7 +18,7 @@ router.get('/',(req,res)=>{
 
 router.get('/:owner/:repository',(req,res)=>{
     console.log('new data')
-    const reqUri = baseUri+ '/repos/' + req.params.owner + '/' + req.params.repository + '/issues'
+    const reqUri = baseUri+ '/repos/' + req.params.owner + '/' + req.params.repository + '/issues' + '?per_page=50'
     console.log(reqUri)
 
     let reqObs =  Rx.Observable.fromPromise(axios.get(reqUri))

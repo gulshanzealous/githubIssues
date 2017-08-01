@@ -25,6 +25,8 @@
     "body-parser": "^1.17.2",
     "css-loader": "^0.28.4",
     "express": "^4.15.3",
+    "gh-pages": "^1.0.0",
+    "moment": "^2.18.1",
     "postcss-loader": "^2.0.6",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
