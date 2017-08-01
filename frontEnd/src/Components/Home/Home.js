@@ -27,6 +27,7 @@ class Home extends Component {
         this.setState({loading:true})
         let uri = 'http://localhost:8080/' + this.state.ownerInput + '/' + this.state.repoInput + '/'
         console.log(uri)
+
         axios.get(uri)
         .then(res => {
             console.log(JSON.stringify(res.data,null,4))
@@ -35,7 +36,7 @@ class Home extends Component {
             }
             this.setState({ issues: res.data, loading:false, error:null })
         })
-        .catch(err => console.log(err))
+        .catch(err => this.setState({ issues: res.data, loading:false, error:true }) )
     }
 
     clearResults = (event) => {
@@ -76,7 +77,7 @@ class Home extends Component {
              <button value="Clear" className = 'buttonStyle' onClick = {this.clearResults} > Clear </button>
             <br/>
         </form>
-        <div className = 'issueContainer' >
+        <div className = 'issuesContainer' >
              { loading? <div> Loading, please wait ... </div> : null } 
             { error ? <div> No repository found for these identifiers </div> : null }
             { issues.length > 0 ? this.renderIssues(issues) : null }

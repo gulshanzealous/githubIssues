@@ -8,7 +8,7 @@ class Issue extends React.Component{
         const { issue } = this.props
 
         return(
-             <div  >
+             <div className = 'issueContainer' >
                 <div> URL : {issue.url} </div>
                  <div> Repository URL : {issue.repository_url} </div>
                   <div> Title : {issue.title} </div>
