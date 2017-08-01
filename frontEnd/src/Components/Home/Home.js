@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 require('./styles.css')
 import axios from 'axios'
-
+import Issue from './Issue'
 
 class Home extends Component {
 
@@ -31,7 +31,7 @@ class Home extends Component {
         .then(res => {
             console.log(JSON.stringify(res.data,null,4))
             if(res.data.status === 'error'){
-                return this.setState({ issues:[], error:'no repository found',loading:false })
+                return this.setState({ issues:[], error:true,loading:false })
             }
             this.setState({ issues: res.data, loading:false, error:null })
         })
@@ -45,13 +45,8 @@ class Home extends Component {
 
     renderIssues(issues){
         return issues.map((issue,i) => {
-           return( <div key = {i}  >
-                <div> URL : {issue.url} </div>
-                 <div> Repository URL : {issue.repository_url} </div>
-                  <div> Title : {issue.title} </div>
-                  <div> User Name : {issue.user.login} </div>
-                  <br/> <br/>
-            </div>
+           return(
+               <Issue issue = {issue}  key = {i} />
            )
         })
     }
@@ -59,7 +54,7 @@ class Home extends Component {
 
   render() {
     
-    let issues = this.state.issues
+    let {issues,loading,error} = this.state
 
     return (
       <div className='home-container' >
@@ -82,8 +77,9 @@ class Home extends Component {
             <br/>
         </form>
         <div className = 'issueContainer' >
-            {/* { this.state.loading? <Loader loaded={this.state.loading}> </Loader> : null } */}
-        { issues.length > 0 ? this.renderIssues(issues) : null }
+             { loading? <div> Loading, please wait ... </div> : null } 
+            { error ? <div> No repository found for these identifiers </div> : null }
+            { issues.length > 0 ? this.renderIssues(issues) : null }
         </div>
       </div>
     );
