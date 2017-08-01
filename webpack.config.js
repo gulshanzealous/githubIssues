@@ -11,6 +11,9 @@ const frontend  = {
   context,
   devtool: debug ? "inline-sourcemap" : null,
   entry: "./index.js",
+  resolve: {
+    extensions: [".js", ".json", ".css"]
+  },
   module: {
     rules: [
       {
@@ -24,11 +27,26 @@ const frontend  = {
                   ],
         }
       },
+    //   {
+    //     test: /\.css$/,
+    //     use: [
+    //         'style-loader?sourceMap',
+    //         'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
+    //     ]
+    //   },
       {
         test: /\.css$/,
         use: [
-            'style-loader?sourceMap',
-            'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              modules: true,
+              sourceMap: true,
+              importLoaders: 1,
+              localIdentName: "[name]--[local]--[hash:base64:8]"
+            }
+          },
         ]
       },
       

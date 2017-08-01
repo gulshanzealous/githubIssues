@@ -4,3 +4,8 @@
     width:750px;
     background-color:'#ccc';
 }
+
+.form{
+    height:100px;
+    display:'flex';
+}

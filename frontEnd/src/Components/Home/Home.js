@@ -22,7 +22,7 @@ class Home extends Component {
 
     queryIssues = (event) => {
         event.preventDefault()
-        let uri = 'http://localhost/' + this.state.ownerInput + '/' + this.state.repoInput + '/'
+        let uri = 'http://localhost:8080/' + this.state.ownerInput + '/' + this.state.repoInput + '/'
         console.log(uri)
         axios.get(uri)
         .then(res => {
@@ -34,7 +34,7 @@ class Home extends Component {
 
     renderIssues(issues){
         return issues.map((issue,i) => {
-           return( <div key = {i}>
+           return( <div key = {i}  >
                 <div> {issue.url} </div>
                  <div> {issue.repository_url} </div>
                   <div> {issue.title} </div>
@@ -51,11 +51,11 @@ class Home extends Component {
     let issues = this.state.issues
 
     return (
-      <div className = 'home-container' >
+      <div className='home-container' >
         Search issues for a github repository
 
-        <form onSubmit = { this.queryIssues }>
-            <label>
+        <form onSubmit = { this.queryIssues } className = 'form' >
+            <label >
                 Owner name : 
                 <input type = "text" onChange = {this.onChangeOwner} value = {this.state.ownerInput} />
             </label>
