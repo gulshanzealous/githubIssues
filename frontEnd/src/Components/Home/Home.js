@@ -7,7 +7,8 @@ class Home extends Component {
     state = {
         ownerInput:'',
         repoInput:'',
-        issues:[]
+        issues:[],
+        loading:false
     }
 
     onChangeOwner = (event) => {
