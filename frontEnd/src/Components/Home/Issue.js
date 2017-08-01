@@ -12,26 +12,12 @@ class Issue extends React.Component{
         
         return(
 
-
-
-            //  <div className = 'issueContainer' >
-            //     <div> URL : {issue.url} </div>
-            //      <div> Repository URL : {issue.repository_url} </div>
-            //       <div> Title : {issue.title} </div>
-            //       <div> User Name : {issue.user.login} </div>
-            //       <br/> <br/>
-            // </div>
             <div className = 'issueContainer'>
 
 
                 <div className ='cell'>
                     <div className='field'> Github Page </div>
                     <a href={issue.html_url} target='_blank' className='value'> {issue.html_url} </a>
-                </div>
-
-                <div className ='cell'>
-                    <div className='field'> Issue Title </div>
-                    <div className='value'> {issue.title} </div>
                 </div>
 
                 <div className ='cell'>
