@@ -3,7 +3,6 @@ const express = require('express')
 const app = express()
 const router = express.Router()
 const Rx = require('rxjs/Rx');
-const RxDOM = require('rx-dom');
 const path = require('path')
 
 const baseUri = 'https://api.github.com'
@@ -25,9 +24,16 @@ router.get('/:owner/:repository',(req,res)=>{
     let reqObs =  Rx.Observable.fromPromise(axios.get(reqUri))
                                 .map(response => response.data)
 
-    reqObs.subscribe( response => {
-        res.send(response)
-    })
+    reqObs.subscribe( 
+        response => {
+            res.send(response)
+        }, error => {
+            res.send({ status:'error' })
+        }, () => {
+            console.log('completed')
+        }
+
+    )
 
 })
 

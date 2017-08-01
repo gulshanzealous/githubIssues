@@ -1,11 +1,60 @@
 
 .home-container{
-    height:1350px;
-    width:750px;
-    background-color:'#ccc';
+    width:100%;
+    padding-top: 50px;
+    display: flex !important;
+    justify-content:center!important;
+    align-items:center!important;
+    flex-direction: column;
+}
+ 
+.titleStyle{
+    text-align:center;
+    padding-bottom:50px;
+    /* padding-left: 100px; */
 }
 
 .form{
-    height:100px;
-    display:'flex';
+    width:100% !important;
+    display:flex!important;
+    /* background-color: #f89!important; */
+    align-self:center!important;
+    /* padding-left:100px; */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+} 
+
+
+.labelStyle{
+    padding-right:100px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.inputStyle{
+    height:40px;
+    border-radius: 5%;
+    width:250px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.buttonStyle{
+    height:40px;
+    width:150px;
+    background-color:#47f;
+    border-radius:5%;
+    color:#fff;
+    font-size:16px;
+    margin-left:50px;
+
+}
+
+
+.issueContainer{
+    padding-top:50px;
+
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import './styles.css'
+require('./styles.css')
 import axios from 'axios'
+
 
 class Home extends Component {
 
@@ -8,7 +9,8 @@ class Home extends Component {
         ownerInput:'',
         repoInput:'',
         issues:[],
-        loading:false
+        loading:false,
+        error:null
     }
 
     onChangeOwner = (event) => {
@@ -16,29 +18,38 @@ class Home extends Component {
     }
 
     onChangeRepo = (event) => {
+
         this.setState({ repoInput: event.target.value })
     }
 
-
     queryIssues = (event) => {
         event.preventDefault()
+        this.setState({loading:true})
         let uri = 'http://localhost:8080/' + this.state.ownerInput + '/' + this.state.repoInput + '/'
         console.log(uri)
         axios.get(uri)
         .then(res => {
             console.log(JSON.stringify(res.data,null,4))
-            this.setState({ issues: res.data })
+            if(res.data.status === 'error'){
+                return this.setState({ issues:[], error:'no repository found',loading:false })
+            }
+            this.setState({ issues: res.data, loading:false, error:null })
         })
         .catch(err => console.log(err))
+    }
+
+    clearResults = (event) => {
+        event.preventDefault()
+        this.setState({ issues:[],  })
     }
 
     renderIssues(issues){
         return issues.map((issue,i) => {
            return( <div key = {i}  >
-                <div> {issue.url} </div>
-                 <div> {issue.repository_url} </div>
-                  <div> {issue.title} </div>
-                  <div> {issue.user.login} </div>
+                <div> URL : {issue.url} </div>
+                 <div> Repository URL : {issue.repository_url} </div>
+                  <div> Title : {issue.title} </div>
+                  <div> User Name : {issue.user.login} </div>
                   <br/> <br/>
             </div>
            )
@@ -52,23 +63,27 @@ class Home extends Component {
 
     return (
       <div className='home-container' >
-        Search issues for a github repository
+        <h2 className = 'titleStyle'> Search issues for a github repository </h2>
 
         <form onSubmit = { this.queryIssues } className = 'form' >
-            <label >
-                Owner name : 
-                <input type = "text" onChange = {this.onChangeOwner} value = {this.state.ownerInput} />
+            <label className = 'labelStyle' >
+                {/* Owner name :  */}
+                <input  className='inputStyle' type = "text" onChange = {this.onChangeOwner} value = {this.state.ownerInput}
+                    placeholder='  owner name' required />
             </label>
 
-            <label>
-                Repository :
-                <input type = "text" onChange = {this.onChangeRepo} value = {this.state.repoInput} />
+            <label className = 'labelStyle' >
+                {/* Repository : */}
+                <input className='inputStyle' type = "text" onChange = {this.onChangeRepo} value = {this.state.repoInput} 
+                placeholder='   repository name' required />
             </label>
-             <input type="submit" value="Submit" />
+             <input type="submit" value="Search" className = 'buttonStyle' />
+             <button value="Clear" className = 'buttonStyle' onClick = {this.clearResults} > Clear </button>
             <br/>
         </form>
-        <div>
-        { this.renderIssues(issues) }
+        <div className = 'issueContainer' >
+            {/* { this.state.loading? <Loader loaded={this.state.loading}> </Loader> : null } */}
+        { issues.length > 0 ? this.renderIssues(issues) : null }
         </div>
       </div>
     );

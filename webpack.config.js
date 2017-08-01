@@ -1,7 +1,7 @@
 
 var debug = process.env.NODE_ENV !== "production";
 var webpack = require('webpack');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 var nodeExternals = require('webpack-node-externals');
 
 var path = require('path');
@@ -27,29 +27,20 @@ const frontend  = {
                   ],
         }
       },
+    
+      {
+        test   : /\.css$/,
+        loaders: ['style-loader', 'css-loader', 'resolve-url-loader']
+      },
+
     //   {
     //     test: /\.css$/,
-    //     use: [
-    //         'style-loader?sourceMap',
-    //         'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
-    //     ]
+    //     use: ExtractTextPlugin.extract({
+    //       fallback: "style-loader",
+    //       use: "css-loader"
+    //     })
     //   },
-      {
-        test: /\.css$/,
-        use: [
-          "style-loader",
-          {
-            loader: "css-loader",
-            options: {
-              modules: true,
-              sourceMap: true,
-              importLoaders: 1,
-              localIdentName: "[name]--[local]--[hash:base64:8]"
-            }
-          },
-        ]
-      },
-      
+ 
       { test: /\.svg$/, loader: "url-loader?limit=10000&mimetype=image/svg+xml" },
       { test: /\.(png|jpg|jpeg|woff2?|ttf|eot|gif)$/, loader: "file-loader" }
 
@@ -63,7 +54,7 @@ const frontend  = {
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.UglifyJsPlugin({ mangle: false, sourcemap: false }),
-    // new ExtractTextPlugin({ filename: 'app.css', allChunks: true }),
+    new ExtractTextPlugin("styles.css"),
   ],
 };
 
@@ -131,3 +122,20 @@ module.exports = [
 //             use: 'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]!resolve-url!postcss',
 //         }),
 //       },
+
+   
+    //   {
+    //     test: /\.css$/,
+    //     use: [
+    //         'style-loader?sourceMap',
+    //         'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]'
+    //     ]
+    //   },
+    //   {
+    //     test: /\.css$/,
+    //     loader: ExtractTextPlugin.extract({
+    //         fallback: 'style-loader',
+    //         use: 'css-loader?modules&importLoaders=1&localIdentName=[path]___[name]__[local]___[hash:base64:5]!resolve-url-loader!postcss-loader',
+    //     }),
+    //   },
+      
