@@ -27,7 +27,7 @@ class Home extends Component {
     queryIssues = (event) => {
         event.preventDefault()
         this.setState({loading:true, error:false})
-        let uri = 'http://localhost:8080/' + this.state.ownerInput.trim() + '/' + this.state.repoInput.trim() + '/'
+        let uri = 'https://github-issues-listings.herokuapp.com/' + this.state.ownerInput.trim() + '/' + this.state.repoInput.trim() + '/'
 
         let {cache} = this.state
         let searchCacheForMatch = Object.keys(cache).find(key => key === uri )

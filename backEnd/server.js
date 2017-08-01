@@ -10,6 +10,6 @@ app.use(express.static(publicPath))
 require('./routes')(express,app)
 
 
-app.listen(8080,()=>{
-    console.log('server has started at port 8080')
+app.listen(80,()=>{
+    console.log('server has started at port 80')
 })
